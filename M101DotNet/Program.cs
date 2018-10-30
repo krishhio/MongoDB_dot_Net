@@ -28,8 +28,11 @@ namespace M101DotNet
                 {"name","Cristian"}
             };
 
-            doc.Add("Привет! Я ", 40);
+            doc.Add("Empresa", "ISS");
+            doc.Add("Edad ", 40);
             doc["profesion"] = "Solution Architect";
+            doc["Origen"] = "Chiapas";
+
             Console.WriteLine(doc);
 
         }
