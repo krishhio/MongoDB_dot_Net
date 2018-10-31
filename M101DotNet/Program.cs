@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using System.Runtime.Remoting.Messaging;
 
 namespace M101DotNet
 {
@@ -33,6 +34,12 @@ namespace M101DotNet
             doc["profesion"] = "Solution Architect";
             doc["Origen"] = "Chiapas";
 
+            var nestedArray = new BsonArray();
+            nestedArray.Add(new BsonDocument("color", "red"));
+            nestedArray.Add(new BsonDocument("color", "green"));
+            nestedArray.Add(new BsonDocument("color", "black"));
+            doc.Add("array", nestedArray);
+            Console.WriteLine(doc["array"][0]["color"]);
             Console.WriteLine(doc);
 
         }
