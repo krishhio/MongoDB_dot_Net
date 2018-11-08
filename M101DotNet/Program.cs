@@ -117,7 +117,7 @@ namespace M101DotNet
                 }
             }
             */
-
+            /*
             var connectionString = "mongodb://127.0.0.1:27017";
             var client = new MongoClient(connectionString);
             var db = client.GetDatabase("test");
@@ -126,7 +126,32 @@ namespace M101DotNet
 
             await col.Find(new BsonDocument()).ForEachAsync(doc => Console.WriteLine(doc));
 
+            */
 
+            var client = new MongoClient();
+            var db = client.GetDatabase("test");
+            var col = db.GetCollection<Person>("people");
+
+            //var filter = new BsonDocument("name", "Cristian Gomez");
+            /*
+            var filter = new BsonDocument("$and", new BsonArray
+            {
+                new BsonDocument("Age", new BsonDocument("$eq",30)),
+                new BsonDocument("name","Cristian Gomez")
+            });
+            */
+
+            var builder = Builders<Person>.Filter;
+            //var filter = builder.And(builder.Gt("Age", 20), builder.Eq("name", "Candy"));
+            var filter = builder.Gt("Age", 20) & builder.Eq("name", "Candy"); 
+            //var list = await col.Find(filter).ToListAsync();
+            //var list = await col.Find("{\"name\":'Cristian Gomez'}").ToListAsync();
+            var list = await col.Find(filter).ToListAsync();
+
+            foreach (var doc in list)
+            {
+                Console.WriteLine(doc);
+            }
 
 
 
