@@ -127,6 +127,7 @@ namespace M101DotNet
             await col.Find(new BsonDocument()).ForEachAsync(doc => Console.WriteLine(doc));
 
             */
+            /*
 
             var client = new MongoClient();
             var db = client.GetDatabase("test");
@@ -140,7 +141,7 @@ namespace M101DotNet
                 new BsonDocument("name","Cristian Gomez")
             });
             */
-
+            /*
             var builder = Builders<Person>.Filter;
             //var filter = builder.And(builder.Gt("Age", 20), builder.Eq("name", "Candy"));
             var filter = builder.Gt("Age", 20) & builder.Eq("name", "Candy"); 
@@ -152,7 +153,29 @@ namespace M101DotNet
             {
                 Console.WriteLine(doc);
             }
+            */
 
+            var client = new MongoClient();
+            var db = client.GetDatabase("test");
+            var col = db.GetCollection<BsonDocument>("people");
+
+            /* var list = await col.Find(new BsonDocument())
+                                 .Skip(1)
+                                 .Limit(1)
+                                 .ToListAsync();*/
+
+            //var list = await col.Find(new BsonDocument())
+            //.Sort("{Age:1}")
+            //.ToListAsync();
+
+            var list = await col.Find(new BsonDocument())
+                                .Project("{name:1,_id:0}")
+                                .ToListAsync();
+
+            foreach (var doc in list)
+            {
+                Console.WriteLine(doc);
+            }
 
 
         }
