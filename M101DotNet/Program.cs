@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
-using System.Runtime.Remoting.Messaging;
+using System.Runtime.CompilerServices;
+
 
 namespace M101DotNet
 {
@@ -10,10 +11,13 @@ namespace M101DotNet
     {
         public static void Main(string[] args)
         {
+
             MainAsync(args).GetAwaiter().GetResult();
             Console.WriteLine();
             Console.WriteLine("Presiona Enter");
             Console.ReadLine();
+
+
         }
 
         static async Task MainAsync(string[] args)
@@ -24,6 +28,8 @@ namespace M101DotNet
              var db = client.GetDatabase("test");
              var col = db.GetCollection<BsonDocument>("people");
              Console.WriteLine("Conexion a Mongodb");*/
+
+            /*
             BsonDocument doc = new BsonDocument
             {
                 {"name","Cristian"}
@@ -41,7 +47,110 @@ namespace M101DotNet
             doc.Add("array", nestedArray);
             Console.WriteLine(doc["array"][0]["color"]);
             Console.WriteLine(doc);
+            */
+
+            /*
+            var person = new Person
+            {
+                name = "Cristian",
+                Age = 29,
+                Colors = new List<string> { "red", "blue" },
+                Pets = new List<Pet> { new Pet { Name = "Sophie", type = "Husky" } },
+                ExtraElements = new BsonDocument("otroNombre","otroDato")
+            };
+
+            using (var writer = new JsonWriter(Console.Out))
+            {
+                BsonSerializer.Serialize(writer, person);
+            }
+            */
+            /*
+
+            var client = new MongoClient("mongodb://127.0.0.1:27017");
+            var db = client.GetDatabase("test");
+
+            var col = db.GetCollection<BsonDocument>("people");
+           //var col = db.GetCollection<Person>("people");
+            var doc = new BsonDocument
+            {
+                {"name","Cristian Gomez"},
+                {"age", 30},
+                {"Profession","Hacker"}
+            };
+            await col.InsertOneAsync(doc);
+
+            var doc2 = new BsonDocument
+            {
+                {"algunDato",true},
+                {"unLoQueSea","blablabla"}
+            };
+
+            var docClass = new Person
+            {
+                name = "Candy",
+                Age = 30,
+                Profession = "Diseñadora Grafica"
+
+            };
+
+
+            await col.InsertManyAsync(new[] { doc, doc2 });
+           // await col.InsertOneAsync(docClass);
+
+            */
+
+            /*
+            var connectionString = "mongodb://127.0.0.1:27017";
+            var client = new MongoClient(connectionString);
+            var db = client.GetDatabase("test");
+            var col = db.GetCollection<BsonDocument>("people");
+
+
+            using (var cursor = await col.Find(new BsonDocument()).ToCursorAsync())
+            {
+                while(await cursor.MoveNextAsync())
+                {
+                    foreach(var doc in cursor.Current)
+                    {
+                        Console.WriteLine(doc);
+                    }
+                }
+            }
+            */
+
+            var connectionString = "mongodb://127.0.0.1:27017";
+            var client = new MongoClient(connectionString);
+            var db = client.GetDatabase("test");
+            var col = db.GetCollection<BsonDocument>("people");
+
+
+            await col.Find(new BsonDocument()).ForEachAsync(doc => Console.WriteLine(doc));
+
+
+
+
 
         }
     }
+
+
+    class Person
+    {
+        public ObjectId Id { get; set;}
+
+        public string name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Profession { get; set; }
+
+
+    }
+
+    class Pet
+    {
+        public string Name { get; set; }
+        public string type { get; set; }
+    }
+
 }
